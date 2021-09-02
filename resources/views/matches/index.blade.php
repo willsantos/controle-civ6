@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('cabecalho')
-    Adicionar Partida
+    Resumo das Partidas
 @endsection
 
 
@@ -17,8 +17,9 @@
         <thead>
         <tr>
             <th scope="col">Data da Partida</th>
-            <th scope="col">Tipo de vitória</th>
             <th scope="col">Vencedor</th>
+            <th scope="col">Tipo de vitória</th>
+            <th scope="col">Civilização</th>
             <th scope="col">Ações</th>
 
         </tr>
@@ -27,10 +28,15 @@
         @foreach($matches as $match)
 
             <tr>
-                <th scope="row">{{$match->date_match}}</th>
-                <td>{{$match->victory_type}}</td>
+                <th scope="row">{{date('d/m/Y',strtotime($match->date_match))}}</th>
                 <td>{{$match->victory_player}}</td>
+                <td>{{$match->victory_type}}</td>
+                <td>{{$match->civilization}}</td>
                 <td>
+                    <span class="d-flex">
+                         <a href="{{route('show_match',$match->id)}}" class="btn btn-info btn-sm mr-1">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
                     <form
                         method="post"
                         action="{{route('match_remove',$match->id)}}"
@@ -38,10 +44,12 @@
                     >
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger btn-sm mr-1">
                             <i class="far fa-trash-alt" aria-label="Excluir"></i>
                         </button>
                     </form>
+                    </span>
+
                 </td>
             </tr>
 

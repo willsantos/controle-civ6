@@ -15,6 +15,7 @@ class MatchesFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'civilization' => 'required',
             'victory_type' => 'required',
             'victory_player' => 'required',
             'player_one_points'=>'required',
@@ -33,6 +34,7 @@ class MatchesFormRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'civilization' => 'Civilização',
             'victory_type' => 'Tipo de vitória',
             'victory_player' => 'Vencedor',
             'player_one_points'=>'Pontos Wilson',

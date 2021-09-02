@@ -11,14 +11,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 
-
 class MatchesController extends Controller
 {
     public function index(Request $request)
     {
-        $matches = Match::query()->orderBy('date_match','DESC')->get();
+        $matches = Match::query()
+            ->orderBy('date_match','DESC')
+            ->orderBy('updated_at','DESC')
+                ->get();
         $message = $request->session()->get('message');
         return view('matches.index',compact('matches','message'));
+    }
+
+    public function show(Request $request)
+    {
+        $match = Match::find($request->id);
+        return view('matches.show',compact('match'));
     }
 
     public function create()
@@ -36,6 +44,35 @@ class MatchesController extends Controller
             "Partida do dia {$match->date_match} adicionada com sucesso"
         );
 
+        return redirect()->route('list_matches');
+    }
+
+    public function formUpdate(Request $request)
+    {
+        $match = Match::find($request->id);
+
+        return view('matches.update',compact('match'));
+    }
+
+    public function update(MatchesFormRequest $request, Match $match)
+    {
+        $data = $request->all([
+            'victory_type',
+            'victory_player',
+            'civilization',
+            'player_one_points',
+            'player_two_points',
+            'date_match',
+        ]);
+
+        $match = Match::find($request->id);
+
+        $match->update($data);
+        $match->save();
+        $request->session()->flash(
+            "message",
+            "Partida do dia {$match->date_match} atualizada com sucesso"
+        );
         return redirect()->route('list_matches');
     }
 
